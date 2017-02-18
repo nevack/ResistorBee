@@ -21,7 +21,7 @@
         <org.nevack.android.resistorbee.ResistorView
             android:id="@+id/resistor"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="160dp"
             app:stroke_count="5"/>
 
         <TextView

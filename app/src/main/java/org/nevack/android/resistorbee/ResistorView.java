@@ -25,6 +25,8 @@ public class ResistorView extends View {
     public static final int STROKE_WIDTH = 20;
     private int x;
     private int y;
+    private RectF rectLeft;
+    private RectF rectRight;
 
     public ResistorView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -44,6 +46,9 @@ public class ResistorView extends View {
         strokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         strokePaint.setStyle(Paint.Style.FILL);
         strokePaint.setColor(0xFF0000AA);
+
+        rectLeft = new RectF();
+        rectRight = new RectF();
     }
 
     public void setStrokeCount(int count) {
@@ -65,16 +70,18 @@ public class ResistorView extends View {
     }
 
     protected void onDraw(Canvas canvas) {
-
         x = (getWidth() - RESISTOR_WIDTH) / 2;
         y = (getHeight() - RESISTOR_HEIGHT) / 2;
+
+        rectLeft.set(x - RESISTOR_END_WIDTH, y - RADIUS, x, y + RESISTOR_HEIGHT + RADIUS);
+        rectRight.set(x + RESISTOR_WIDTH, y - RADIUS, x + RESISTOR_WIDTH + RESISTOR_END_WIDTH, y + RESISTOR_HEIGHT + RADIUS);
 
         strokePaint.setColor(0xFF000000);
         canvas.drawRect(
                 0,
-                (getHeight() - WIRE_THICKNESS) / 2,
+                y + (RESISTOR_HEIGHT - WIRE_THICKNESS) / 2,
                 getWidth(),
-                (getHeight() + WIRE_THICKNESS) / 2,
+                y + (RESISTOR_HEIGHT + WIRE_THICKNESS) / 2,
                 strokePaint
         );
 
@@ -86,10 +93,8 @@ public class ResistorView extends View {
                 bodyPaint
         );
 
-        RectF rect1 = new RectF(x - RESISTOR_END_WIDTH, y - RADIUS, x, y + RESISTOR_HEIGHT + RADIUS);
-        RectF rect2 = new RectF(x + RESISTOR_WIDTH, y - RADIUS, x + RESISTOR_WIDTH + RESISTOR_END_WIDTH, y + RESISTOR_HEIGHT + RADIUS);
-        canvas.drawRoundRect(rect1, RADIUS, RADIUS, bodyPaint);
-        canvas.drawRoundRect(rect2, RADIUS, RADIUS, bodyPaint);
+        canvas.drawRoundRect(rectLeft, RADIUS, RADIUS, bodyPaint);
+        canvas.drawRoundRect(rectRight, RADIUS, RADIUS, bodyPaint);
 
         for(int i = 1; i <= strokeCount; i++) {
             strokePaint.setColor(colors[i - 1]);
@@ -100,11 +105,20 @@ public class ResistorView extends View {
                     y + RESISTOR_HEIGHT,
                     strokePaint
             );
+
+//            strokePaint.setStrokeWidth(7);
 //            canvas.drawLine(
 //                    x + RESISTOR_WIDTH / strokeCount * i - RESISTOR_WIDTH / strokeCount / 2,
 //                    y + RESISTOR_HEIGHT,
 //                    getWidth() / strokeCount * i - getWidth() / strokeCount / 2,
-//                    getHeight() + 40,
+//                    getHeight() - 50,
+//                    strokePaint
+//            );
+//
+//            canvas.drawCircle(
+//                    getWidth() / strokeCount * i - getWidth() / strokeCount / 2,
+//                    getHeight() - 50,
+//                    50,
 //                    strokePaint
 //            );
         }
